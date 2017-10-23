@@ -8,11 +8,17 @@ var env       = process.env.NODE_ENV || 'development';
 var config    = require(__dirname + '/../config/sequelize_config.js')[env];
 var db        = {};
 
+if (process.env.PSQL_FORCE_SSL) {
+    var pg = require('pg');
+    pg.defaults.ssl = true;
+}
+
 if (config.use_env_variable) {
   var sequelize = new Sequelize(process.env[config.use_env_variable]);
 } else {
   var sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
+
 
 fs
   .readdirSync(__dirname)
